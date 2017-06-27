@@ -1,0 +1,5 @@
+本脚本基于网友songjia提供的安装脚本修改实现。
+我只是调整了代码中一些小的细节，不需要修改SOUI内核。
+setupdll编译完成后将setupdll.dll复制到nsis的plugins目录及脚本的plugin目录后再编译.
+
+启程软件 2015年9月21日
