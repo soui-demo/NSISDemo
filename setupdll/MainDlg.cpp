@@ -6,8 +6,6 @@
 #include "MainDlg.h"
 #include <sstream>
 
-#include <dwmapi.h>
-#pragma comment(lib,"dwmapi.lib")
 
 CMainDlg::CMainDlg() : SHostWnd(_T("LAYOUT:XML_MAINWND"))
 {
@@ -19,13 +17,6 @@ CMainDlg::~CMainDlg()
     shellNotifyIcon.Hide();
 }
 
-int CMainDlg::OnCreate(LPCREATESTRUCT lpCreateStruct)
-{
-    // 		MARGINS mar = {5,5,30,5};
-    // 		DwmExtendFrameIntoClientArea ( m_hWnd, &mar );
-    SetMsgHandled(FALSE);
-    return 0;
-}
 
 BOOL CMainDlg::OnInitDialog(HWND hWnd, LPARAM lParam)
 {

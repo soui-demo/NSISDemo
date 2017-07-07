@@ -14,9 +14,6 @@
 #include "stdafx.h"
 #include "MainDlg.h"
 #include "Utils.h"
-#include "../controls.extend/SVscrollbar.h"
-#include "../controls.extend/schatedit.h"
-#include "../components/resprovider-zip/zipresprovider-param.h"
 #include <sstream>
 #include <shlobj.h>
 #define NSISAPI extern "C" __declspec(dllexport) void __cdecl
@@ -81,13 +78,7 @@ NSISAPI  InitWindow(HWND hwndParent, int string_size, char *variables, stack_t *
 
         pComMgr = new SComMgr;
 
-        //将程序的运行路径修改到项目所在目录所在的目录
-        //TCHAR szCurrentDir[MAX_PATH] = { 0 };
-        //GetModuleFileName(NULL, szCurrentDir, sizeof(szCurrentDir));
-        //LPTSTR lpInsertPos = _tcsrchr(szCurrentDir, _T('\\'));
-        //_tcscpy(lpInsertPos + 1, _T(".."));
         wstring t = tmpPath + _T("\\");
-        //MessageBox(NULL, t.c_str(), _T(""), MB_OK);
         SetCurrentDirectory(t.c_str());
         {
             BOOL bLoaded = FALSE;
@@ -179,7 +170,7 @@ NSISAPI  ShowPage(HWND hwndParent, int string_size, char *variables, stack_t **s
 {
     EXDLL_INIT();
     pMainDlg->ShowWindow(SW_SHOWNORMAL);
-    int nRet = theApp->Run(pMainDlg->m_hWnd);
+    int nRet = theApp->Run(NULL);
 }
 
 //关闭窗口
@@ -575,19 +566,19 @@ NSISAPI NSISMessageBox(HWND hwndParent, int string_size, char *variables, stack_
     PopString(title);
     int ret = 0;
     if (type == 0) {//警告对话框
-        ret = SMessageBox(pMainDlg->GetContainer()->GetHostHwnd(), content.c_str(), title.c_str(), MB_OK | MB_ICONEXCLAMATION);
+        ret = SMessageBox(pMainDlg->m_hWnd, content.c_str(), title.c_str(), MB_OK | MB_ICONEXCLAMATION);
     }
     else if (type == 1) {//询问对话框
-        ret = SMessageBox(pMainDlg->GetContainer()->GetHostHwnd(), content.c_str(), title.c_str(), MB_YESNO | MB_ICONQUESTION);
+        ret = SMessageBox(pMainDlg->m_hWnd, content.c_str(), title.c_str(), MB_YESNO | MB_ICONQUESTION);
     }
     else if (type == 2) {//终止对话框
-        ret = SMessageBox(pMainDlg->GetContainer()->GetHostHwnd(), content.c_str(), title.c_str(), MB_ABORTRETRYIGNORE);
+        ret = SMessageBox(pMainDlg->m_hWnd, content.c_str(), title.c_str(), MB_ABORTRETRYIGNORE);
     }
     else if (type == 3) {//询问错误确认对话框
-        ret = SMessageBox(pMainDlg->GetContainer()->GetHostHwnd(), content.c_str(), title.c_str(), MB_ICONQUESTION | MB_OKCANCEL);
+        ret = SMessageBox(pMainDlg->m_hWnd, content.c_str(), title.c_str(), MB_ICONQUESTION | MB_OKCANCEL);
     }
     else if (type == 4) {//错误对话框
-        ret = SMessageBox(pMainDlg->GetContainer()->GetHostHwnd(), content.c_str(), title.c_str(), MB_OK | MB_ICONSTOP);
+        ret = SMessageBox(pMainDlg->m_hWnd, content.c_str(), title.c_str(), MB_OK | MB_ICONSTOP);
     }
     pushint(ret);
 }
