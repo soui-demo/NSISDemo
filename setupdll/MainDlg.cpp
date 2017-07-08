@@ -248,6 +248,7 @@ LRESULT CMainDlg::OnStopMsgLoop(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL/* 
     if (pbtn_min)
         pbtn_min->SetVisible(FALSE, TRUE);
 
+    SetTimer(TMR_AUTOCHANGE, 3000);
     PostMessage(WM_QUIT);
     //if (theApp->isRun)
     //theApp->isRun = FALSE;
@@ -260,5 +261,35 @@ LRESULT CMainDlg::OnUnstallStartNext(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
         tab->SetCurSel(6);
     }
     return 0;
+}
+
+void CMainDlg::OnTimer(UINT_PTR nIDEvent)
+{
+    SetMsgHandled(FALSE);
+    if (nIDEvent == TMR_AUTOCHANGE)
+    {
+        if (tab)
+        {
+            size_t tab_index = tab->GetCurSel();
+            if (tab_index == 3)
+            {
+                STabCtrl* ptab_installing = FindChildByName2<STabCtrl>(L"tab_installing");
+                if (ptab_installing)
+                {
+                    size_t index = ptab_installing->GetCurSel();
+                    if (index >= ptab_installing->GetItemCount() - 1)
+                    {
+                        index = 0;
+                    }
+                    else
+                    {
+                        index++;
+                    }
+                    ptab_installing->SetCurSel(index);
+                }
+            }
+        }
+
+    }
 }
 
