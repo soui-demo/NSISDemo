@@ -80,6 +80,7 @@ NSISAPI  InitWindow(HWND hwndParent, int string_size, char *variables, stack_t *
 
         wstring t = tmpPath + _T("\\");
         SetCurrentDirectory(t.c_str());
+        SetDllDirectory(t.c_str());
         {
             BOOL bLoaded = FALSE;
             CAutoRefPtr<SOUI::IImgDecoderFactory> pImgDecoderFactory;
