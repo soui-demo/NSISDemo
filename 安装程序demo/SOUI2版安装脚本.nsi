@@ -406,20 +406,32 @@ Function CreateMutex
 	System::Call 'kernel32::CreateMutexA(i 0, i 0, t "${MyMutex_Install}") i .R1 ?e'
 	Pop $R0
 	System::Call 'kernel32::CloseHandle(i R1) i.s'
-	;检查卸载互斥：
-	System::Call 'kernel32::CreateMutexA(i 0, i 0, t "${MyMutex_UnInstall}") i .R3 ?e'
-	Pop $R2
-	System::Call 'kernel32::CloseHandle(i R3) i.s'
-	;判断安装/卸载互斥的存在
+	;判断安装互斥的存在
 	${If} $R0 != 0
 		MessageBox MB_RetryCancel|MB_ICONEXCLAMATION "安装程序已经运行！" IdRetry ReCheck
-		Quit
-	${ElseIf} $R2 != 0
-		MessageBox MB_RetryCancel|MB_ICONEXCLAMATION "卸载程序已经运行！" IdRetry ReCheck
 		Quit
 	${Else}
 		;创建安装互斥：
 		System::Call 'kernel32::CreateMutexA(i 0, i 0, t "${MyMutex_Install}") i .R1 ?e'
+		Pop $R0
+		StrCmp $R0 0 +2
+		Quit
+	${EndIf}
+FunctionEnd
+
+Function un.CreateMutex
+	;检查卸载互斥：
+	ReCheck:
+	System::Call 'kernel32::CreateMutexA(i 0, i 0, t "${MyMutex_UnInstall}") i .R1 ?e'
+	Pop $R0
+	System::Call 'kernel32::CloseHandle(i R1) i.s'
+	;判断卸载互斥的存在
+	${If} $R0 != 0
+		MessageBox MB_RetryCancel|MB_ICONEXCLAMATION "卸载程序已经运行！" IdRetry ReCheck
+		Quit
+	${Else}
+		;创建安装互斥：
+		System::Call 'kernel32::CreateMutexA(i 0, i 0, t "${MyMutex_UnInstall}") i .R1 ?e'
 		Pop $R0
 		StrCmp $R0 0 +2
 		Quit
@@ -572,4 +584,6 @@ Function un.onInit
 	;File `/ONAME=$PLUGINSDIR\soui-sys-resource.dll` `plugins\soui-sys-resource.dll`
 	SetOutPath $PLUGINSDIR
   File /r `plugins\*.*`
+	;检查程序互斥
+	Call un.CreateMutex
 FunctionEnd
